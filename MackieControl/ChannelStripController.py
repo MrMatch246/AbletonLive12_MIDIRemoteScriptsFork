@@ -5,8 +5,6 @@
 
 from itertools import chain
 
-from past.utils import old_div
-
 from _Generic.Devices import *
 from .MackieControlComponent import *
 
@@ -174,9 +172,9 @@ class ChannelStripController(MackieControlComponent):
         elif switch_id == SID_FADERBANK_NEXT_BANK:
             if value == BUTTON_PRESSED:
                 if self.shift_is_pressed():
-                    last_possible_offset = old_div(
-                        self.__controlled_num_of_tracks() - self.__strip_offset(),
-                        len(self.__channel_strips)) * len(
+                    last_possible_offset = ((
+                                                    self.__controlled_num_of_tracks() - self.__strip_offset()) // len(
+                        self.__channel_strips)) * len(
                         self.__channel_strips) + self.__strip_offset()
                     if last_possible_offset == self.__controlled_num_of_tracks():
                         last_possible_offset -= len(self.__channel_strips)
@@ -263,7 +261,7 @@ class ChannelStripController(MackieControlComponent):
                         self.__chosen_plugin.remove_parameters_listener(
                             self.__on_parameter_list_of_chosen_plugin_changed)
                     self.__chosen_plugin = \
-                    self.song().view.selected_track.devices[device_index]
+                        self.song().view.selected_track.devices[device_index]
                     if self.__chosen_plugin != None:
                         self.__chosen_plugin.add_parameters_listener(
                             self.__on_parameter_list_of_chosen_plugin_changed)
@@ -504,10 +502,10 @@ class ChannelStripController(MackieControlComponent):
             if self.__assignment_mode == CSM_VOLPAN:
                 if s.assigned_track() and s.assigned_track().has_audio_output:
                     vpot_param = (
-                    s.assigned_track().mixer_device.panning, 'Pan')
+                        s.assigned_track().mixer_device.panning, 'Pan')
                     vpot_display_mode = VPOT_DISPLAY_BOOST_CUT
                     slider_param = (
-                    s.assigned_track().mixer_device.volume, 'Volume')
+                        s.assigned_track().mixer_device.volume, 'Volume')
                     slider_display_mode = VPOT_DISPLAY_WRAP
             elif self.__assignment_mode == CSM_PLUGINS:
                 vpot_param = self.__plugin_parameter(s.strip_index(),
@@ -515,7 +513,7 @@ class ChannelStripController(MackieControlComponent):
                 vpot_display_mode = VPOT_DISPLAY_WRAP
                 if s.assigned_track() and s.assigned_track().has_audio_output:
                     slider_param = (
-                    s.assigned_track().mixer_device.volume, 'Volume')
+                        s.assigned_track().mixer_device.volume, 'Volume')
                     slider_display_mode = VPOT_DISPLAY_WRAP
             elif self.__assignment_mode == CSM_SENDS:
                 vpot_param = self.__send_parameter(s.strip_index(),
@@ -523,11 +521,11 @@ class ChannelStripController(MackieControlComponent):
                 vpot_display_mode = VPOT_DISPLAY_WRAP
                 if s.assigned_track() and s.assigned_track().has_audio_output:
                     slider_param = (
-                    s.assigned_track().mixer_device.volume, 'Volume')
+                        s.assigned_track().mixer_device.volume, 'Volume')
                     slider_display_mode = VPOT_DISPLAY_WRAP
             elif self.__assignment_mode == CSM_IO and s.assigned_track() and s.assigned_track().has_audio_output:
                 slider_param = (
-                s.assigned_track().mixer_device.volume, 'Volume')
+                    s.assigned_track().mixer_device.volume, 'Volume')
             if self.__flip and self.__can_flip():
                 if self.__any_slider_is_touched():
                     display_parameters.append(vpot_param)
